@@ -40,6 +40,9 @@
       text-decoration: none;
       border-radius: 8px;
       font-weight: 700;
+      cursor: pointer;
+      border: 0;
+      font-size: 1rem;
     }
     a.link { color: #2a5b9e; font-weight: 700; }
     .muted { color: #5a6b7d; font-size: 0.95rem; }
@@ -64,7 +67,9 @@
       var wa = (params.get("wa") || "").trim();
       var enseigne = (params.get("enseigne") || "").trim();
       var agence = (params.get("agence") || "").trim();
+      var formId = (params.get("form") || "2E9ox9").trim();
       var wantsWhatsApp = /whatsapp/i.test(wa);
+      var formUrl = "https://tally.so/r/" + encodeURIComponent(formId);
 
       function waUrl() {
         var text =
@@ -83,6 +88,14 @@
         return u;
       }
 
+      function openWhatsAppThenForm(event) {
+        if (event) event.preventDefault();
+        // 1) Ouvre WhatsApp (chemin actuel)
+        window.open(waUrl(), "_blank");
+        // 2) Ramène cette page vers le formulaire
+        window.location.replace(formUrl);
+      }
+
       var app = document.getElementById("app");
 
       if (wantsWhatsApp) {
@@ -97,7 +110,10 @@
           "<p><a class='btn' id='wa' href='" +
           waUrl() +
           "'>Ouvrir WhatsApp</a></p>" +
-          "<p class='muted'>Tu peux fermer l’onglet du formulaire s’il reste ouvert avec un chargement.</p>";
+          "<p class='muted'>Après le clic, WhatsApp s’ouvre et cette page revient au formulaire.</p>";
+
+        var btn = document.getElementById("wa");
+        if (btn) btn.addEventListener("click", openWhatsAppThenForm);
         return;
       }
 
@@ -111,7 +127,9 @@
         complementUrl() +
         "' target='_blank' rel='noopener noreferrer'>Compléter cet envoi (photo ou info oubliée) →</a></p>" +
         "<p class='muted'><i>Formulaire complément sans code d'accès.</i></p>" +
-        "<p class='muted'>Tu peux fermer l’onglet du formulaire s’il reste ouvert avec un chargement.</p>";
+        "<p><a class='btn' id='back' href='" +
+        formUrl +
+        "'>Retour au formulaire</a></p>";
     })();
   </script>
 </body>
