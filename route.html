@@ -49,6 +49,16 @@
   <div class="card" id="app">Chargement…</div>
   <script>
     (function () {
+      // Si Tally a ouvert cette page dans un nouvel onglet, on ramène
+      // l'onglet du formulaire ici pour éviter le bouton "chargement" bloqué.
+      try {
+        if (window.opener && !window.opener.closed) {
+          window.opener.location.replace(window.location.href);
+          window.close();
+          return;
+        }
+      } catch (e) {}
+
       var params = new URLSearchParams(window.location.search);
       var id = (params.get("id") || "").trim();
       var wa = (params.get("wa") || "").trim();
@@ -83,13 +93,10 @@
           (id || "—") +
           "</span></p>" +
           "<p><b>2. Envoie ta vidéo / photo trop lourde sur WhatsApp</b></p>" +
-          "<p class='muted'>Ouverture de WhatsApp avec le code déjà inclus…</p>" +
+          "<p class='muted'>Le code est déjà inclus dans le message WhatsApp.</p>" +
           "<p><a class='btn' id='wa' href='" +
           waUrl() +
           "'>Ouvrir WhatsApp</a></p>";
-        setTimeout(function () {
-          window.location.replace(waUrl());
-        }, 600);
         return;
       }
 
