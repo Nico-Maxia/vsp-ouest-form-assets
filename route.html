@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Envoi reçu — Vsp Ouest</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #eef3f8;
+      color: #07274a;
+      padding: 2rem 1.25rem;
+      line-height: 1.45;
+    }
+    .card {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 24px rgba(7, 39, 74, 0.08);
+    }
+    h1 { font-size: 1.4rem; margin: 0 0 0.75rem; }
+    .code {
+      display: inline-block;
+      margin: 0.5rem 0 1rem;
+      padding: 0.5rem 0.75rem;
+      background: #eef3f8;
+      border-radius: 8px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    a.btn {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.8rem 1.1rem;
+      background: #dc001a;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+    a.link { color: #2a5b9e; font-weight: 700; }
+    .muted { color: #5a6b7d; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="card" id="app">Chargement…</div>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var id = (params.get("id") || "").trim();
+      var wa = (params.get("wa") || "").trim();
+      var enseigne = (params.get("enseigne") || "").trim();
+      var agence = (params.get("agence") || "").trim();
+      var wantsWhatsApp = /whatsapp/i.test(wa);
+
+      function waUrl() {
+        var text =
+          "CODE SUIVI - " +
+          id +
+          "\n\nBonjour, voici ma vidéo / photo.";
+        return "https://wa.me/33683959703?text=" + encodeURIComponent(text);
+      }
+
+      function complementUrl() {
+        var u =
+          "https://tally.so/r/yP5Aag?mode=complement&complementDe=" +
+          encodeURIComponent(id);
+        if (enseigne) u += "&enseigne=" + encodeURIComponent(enseigne);
+        if (agence) u += "&agence=" + encodeURIComponent(agence);
+        return u;
+      }
+
+      var app = document.getElementById("app");
+
+      if (wantsWhatsApp) {
+        app.innerHTML =
+          "<h1>C'est envoyé.</h1>" +
+          "<p>L'équipe CM a bien reçu ta demande.</p>" +
+          "<p><b>1. Ton code de suivi :</b><br><span class='code'>" +
+          (id || "—") +
+          "</span></p>" +
+          "<p><b>2. Envoie ta vidéo / photo trop lourde sur WhatsApp</b></p>" +
+          "<p class='muted'>Ouverture de WhatsApp avec le code déjà inclus…</p>" +
+          "<p><a class='btn' id='wa' href='" +
+          waUrl() +
+          "'>Ouvrir WhatsApp</a></p>";
+        setTimeout(function () {
+          window.location.replace(waUrl());
+        }, 600);
+        return;
+      }
+
+      app.innerHTML =
+        "<h1>C'est envoyé.</h1>" +
+        "<p>L'équipe CM a bien reçu ta demande.</p>" +
+        "<p><b>Code suivi :</b><br><span class='code'>" +
+        (id || "—") +
+        "</span></p>" +
+        "<p><a class='link' href='" +
+        complementUrl() +
+        "' target='_blank' rel='noopener noreferrer'>Compléter cet envoi (photo ou info oubliée) →</a></p>" +
+        "<p class='muted'><i>Formulaire complément sans code d'accès.</i></p>";
+    })();
+  </script>
+</body>
+</html>
